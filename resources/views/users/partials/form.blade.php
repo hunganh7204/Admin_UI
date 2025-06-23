@@ -1,45 +1,52 @@
 <div class="mb-3">
     <label class="form-label">Họ tên</label>
-    <input type="text" name="full_name" class="form-control" value="{{ old('full_name', $user->full_name ?? '') }}" required>
+    <input type="text" name="full_name" class="form-control"
+        value="{{ old('full_name', $user['fullname'] ?? '') }}" required>
 </div>
+
 <div class="mb-3">
     <label class="form-label">Username</label>
-    <input type="text" name="username" class="form-control" value="{{ old('username', $user->username ?? '') }}" required>
+    <input type="text" name="username" class="form-control"
+        value="{{ old('username', $user['username'] ?? '') }}" required>
 </div>
+
+{{-- Nếu là trang tạo mới thì hiện ô nhập mật khẩu --}}
+@if(empty($isEdit))
 <div class="mb-3">
-    <label class="form-label">Mật khẩu{{ isset($user) ? '' : '' }}</label>
-    <input type="password" name="password" class="form-control">
+    <label class="form-label">Mật khẩu</label>
+    <input type="password" name="password" class="form-control" required>
 </div>
+@endif
+@if(!empty($user['avatar_url']))
+    <div class="mb-3">
+        <label class="form-label">Ảnh hiện tại:</label><br>
+        <img src="{{ $user['avatar_url'] }}" alt="avatar" style="width: 120px; height: 120px; object-fit: cover;" class="img-thumbnail mb-2">
+    </div>
+@endif
 <div class="mb-3">
-    <label class="form-label">Ảnh đại diện (URL)</label>
-    <input type="text" name="avatar_url" class="form-control" value="{{ old('avatar_url', $user->avatar_url ?? '') }}">
+    <label class="form-label">Ảnh đại diện</label>
+    <input type="file" name="avatar_file" class="form-control" accept="image/*">
 </div>
 <div class="mb-3">
     <label class="form-label">Vai trò</label>
-    <select name="role" id="role-select" class="form-select" onchange="toggleDepartmentField()">
-        <option value="teacher" {{ old('role', $user->role ?? '') == 'teacher' ? 'selected' : '' }}>Teacher</option>
-        <option value="student" {{ old('role', $user->role ?? '') == 'student' ? 'selected' : '' }}>Student</option>
-    </select>
-</div>
-<div class="mb-3" id="department-group" style="display: none;">
-    <label class="form-label">Khoa</label>
-    <select name="department_id" class="form-select">
-        @foreach($departments as $id => $name)
-            <option value="{{ $id }}" {{ old('department_id', $user->department_id ?? '') == $id ? 'selected' : '' }}>{{ $name }}</option>
+    <select name="role" class="form-select" required>
+        @foreach(['teacher' => 'Teacher', 'student' => 'Student', 'admin' => 'Admin'] as $key => $label)
+            <option value="{{ $key }}"
+                {{ old('role', strtolower($user['role'] ?? '')) == $key ? 'selected' : '' }}>
+                {{ $label }}
+            </option>
         @endforeach
     </select>
 </div>
+
 <div class="mb-3">
     <label class="form-label">Trạng thái</label>
-    <select name="status" class="form-select">
-        <option value="Active" {{ old('status', $user->status ?? '') == 'Active' ? 'selected' : '' }}>Active</option>
-        <option value="Inactive" {{ old('status', $user->status ?? '') == 'Inactive' ? 'selected' : '' }}>Inactive</option>
+    <select name="status" class="form-select" required>
+        @foreach(['Active' => 'Active', 'Inactive' => 'Inactive'] as $key => $label)
+            <option value="{{ $key }}"
+                {{ old('status', ucfirst(strtolower($user['status'] ?? ''))) == $key ? 'selected' : '' }}>
+                {{ $label }}
+            </option>
+        @endforeach
     </select>
 </div>
-<script>
-function toggleDepartmentField() {
-    const role = document.getElementById('role-select').value;
-    document.getElementById('department-group').style.display = role === 'teacher' ? 'block' : 'none';
-}
-window.addEventListener('DOMContentLoaded', toggleDepartmentField);
-</script>

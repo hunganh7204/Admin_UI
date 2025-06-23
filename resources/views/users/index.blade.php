@@ -18,7 +18,6 @@
             <table class="table table-hover mb-0">
                 <thead class="table-dark">
                     <tr>
-                        <th>ID</th>
                         <th>Họ tên</th>
                         <th>Username</th>
                         <th>Vai trò</th>
@@ -29,21 +28,21 @@
                 <tbody>
                     @foreach($users as $user)
                     <tr>
-                        <td>{{ $user->id }}</td>
-                        <td>{{ $user->full_name }}</td>
-                        <td>{{ $user->username }}</td>
-                        <td>{{ ucfirst($user->role) }}</td>
-                        <td>{{ $user->status }}</td>
+                        <td>{{ $user['fullname'] }}</td>
+                        <td>{{ $user['username'] }}</td>
+                        <td>{{ ucfirst(strtolower($user['role'])) }}</td>
+                        <td>{{ $user['status'] }}</td>
+
                         <td>
-                            <a href="{{ route('users.show', $user->id) }}" class="btn btn-sm btn-outline-info">Xem</a>
-                            <a href="{{ route('users.edit', $user->id) }}" class="btn btn-sm btn-outline-primary">Sửa</a>
-                            @if($user->status == 'Active')
-                                <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline">
+                            <a href="{{ route('users.show', $user['id']) }}" class="btn btn-sm btn-outline-info">Xem</a>
+                            <a href="{{ route('users.edit', $user['id']) }}" class="btn btn-sm btn-outline-primary">Sửa</a>
+                            @if($user['status'] == 'ACTIVE')
+                                <form action="{{ route('users.destroy', $user['id']) }}" method="POST" class="d-inline">
                                     @csrf @method('DELETE')
                                     <button type="submit" class="btn btn-sm btn-outline-danger" onclick="return confirm('Xác nhận vô hiệu hóa tài khoản?')">Vô hiệu hóa</button>
                                 </form>
                             @else
-                                <form action="{{ route('users.activate', $user->id) }}" method="POST" class="d-inline">
+                                <form action="{{ route('users.activate', $user['id']) }}" method="POST" class="d-inline">
                                     @csrf
                                     <button type="submit" class="btn btn-sm btn-outline-success" onclick="return confirm('Kích hoạt lại tài khoản này?')">Kích hoạt</button>
                                 </form>

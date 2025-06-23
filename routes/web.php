@@ -10,5 +10,6 @@ Route::post('/do-login', [AuthController::class, 'login'])->name('doLogin');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 Route::resource('users', UserController::class);
+Route::post('/users', [UserController::class, 'store'])->name('users.store');
 Route::post('/users/{user}/activate', [UserController::class, 'activate'])->name('users.activate');
 
